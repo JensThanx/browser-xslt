@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+     <meta charset="utf-8" />
+     <title>XSLT</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+     <script type="text/javascript" src="js-xslt.js"></script>
+     <script type="text/javascript" src="visual.js"></script>
+     <script type="text/javascript" src="xmlHelper.js"></script>
+     <script type="text/javascript" src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap.css"/>
+     <style>
+    .head1 {
+       background-color: #000033;
+    }
+    .area{
+       min-height: 200pt;
+    }
+    .info{
+       padding-top: 10pt;
+    }
+    #file2{
+       visibility: hidden;
+    }
+    #button1{
+       visibility: hidden;
+    }
+    #button2{
+       visibility: hidden;
+    }     
+   </style>
+ </head>
+ <body>
+    <nav class="navbar navbar-inverse">
+       <div class="container-fluid">
+          <div class="navbar-header">
+             <a class="navbar-brand" id="head" href="#">
+                XSLT Transformation
+             </a>
+          </div>
+       </div>
+    </nav>
+    <div class="container">
+       <div id="alertspace"></div>  
+      <div class="row">
+          <div class="col-lg-3 col-sm-6">
+             <div class="well area"><h3>Step 1: Load XML file</h3>
+                <input type="file" class="btn btn-primary btn-xs btn-block" id="file1" name="File1"/>
+                <div class="info" id="infofile1"></div>
+             </div>          
+          </div>
+          <div class="col-lg-3 col-sm-6">
+             <div class="well area"><h3>Step 2: Load XSL file</h3>
+                <input type="file" class="btn btn-primary btn-xs btn-block" id="file2" name="File2" />
+                <div class="info" id="infofile2"></div>
+             </div>          
+          </div>
+          <div class="col-lg-3 col-sm-6">
+             <div class="well area"><h3>Step 3: Transform the XML with XSL</h3>
+                <button class="btn btn-primary" id="button1">Transform</button>
+                <div class="info" id="infobutton1"></div>
+             </div>
+          </div>     
+          <div class="col-lg-3 col-sm-6">
+             <div class="well area">
+                <h3>Step 4: Download the transformed file</h3>
+                <button class="btn btn-primary" id="button2">Download</button>
+                <div class="info" id="infobutton2"></div>
+             </div>
+          </div>     
+       </div>  
+    </div> 
+    <div class="container-fluid">
+       (C) Jens Thenent, 2016
+    </div>
+     <script>
+      if (window.File && window.FileReader && window.FileList && window.Blob && window.XMLHttpRequest) {
+        // Great success! All the File APIs are supported.
+      } else {
+        alert('The APIs are not fully supported in this browser.');
+      }
+       $("#file1").change(onXMLFileSelect);
+       $("#file2").change(onXSLFileSelect);
+       $("#button1").click(transformXmlXsl);
+       $("#button2").click(downloadTransformedFile);
+       $("#head").click(function(){location.reload()});
+    </script>
+ </body>
+</html>
