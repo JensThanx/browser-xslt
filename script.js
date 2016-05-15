@@ -1,47 +1,35 @@
-// the loaded XML file as object
-var xmlfile;
-var xmlstring;
-var xslfile;
-var transformedXmlFile;
-var testTransform = document.implementation.createDocument("", "xmldoc", null);
-var xmlReader;
+// ###### functions that are called from UI elements (event listeners) ######
 
-// a helper method that triggers a download action
-// @text: the contents of the downloadable file
-// @name: the name of the downloadable file
-// @type: the mime type (not sure if really necessary)
-function download(text, name, type) {
-    var a = downloadLink(text, name, type);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-function downloadLink(text, name, type){
-    var a = document.createElement("a");
-    var file = new Blob([text], {type: type});
-    a.href = URL.createObjectURL(file);
-    a.download = name;
-    a.innerHTML = "Download " + name;
-    return a;
-}
+// XML file gets loaded first and transformed later
+var xmlfile;
+// XSL file gets loaded first and is used for transformation later
+var xslfile;
+// final XML file is created by transformation first and kept for later download
+var transformedXmlFile;
 
 // Handles a file input for one file.
 // A valid XML is expected, the file roughly checked and then parsed.
 // Output of some basic file information or an error message.
 function onXMLFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-    var f = files[0];
-    var fn = f.name;
-    if (fn.length < 4 || fn.substr(fn.length-4, 4).toLowerCase() !== ".xml"){
+	$("#file2").css("visibility", "hidden");
+	$("#button1").css("visibility", "hidden");
+	$("#button2").css("visibility", "hidden"); 
+	$("#infofile2").html("");
+	$("#infobutton1").html("");
+	$("#infobutton2").html("");
+    var fileList = evt.target.files; // FileList object
+    var file = fileList[0];
+    var fileName = file.name;
+    if (fileName.length < 4 || fileName.substr(fileName.length-4, 4).toLowerCase() !== ".xml"){
        $("#info".concat(evt.target.id)).html(alertNode
           ("danger", "The XML file was not processed. Please make sure that the file ends with \".xml\"."));
     }
-    else if (f.type != 'text/xml'){
+    else if (file.type != 'text/xml'){
        $("#info".concat(evt.target.id)).html(alertNode
           ("danger", "The XML file was not processed. Please make sure that it is the correct file type.").toString());
     }
     else{
-       $("#info".concat(evt.target.id)).html('<h4>Loading file:</h4>' + fileInformationList(f));
+       $("#info".concat(evt.target.id)).html('<h4>Loading file:</h4>' + fileInformationList(file));
        xmlReader = new FileReader();
        xmlReader.onloadend = function(e){
          try{
@@ -54,7 +42,7 @@ function onXMLFileSelect(evt) {
                 ("danger", "Error while parsing the XML file. Make sure the file is correct."));
          }
        };
-       xmlReader.readAsText(f);
+       xmlReader.readAsText(file);
     }
 }
 
@@ -62,19 +50,23 @@ function onXMLFileSelect(evt) {
 // A valid XSL is expected, the file roughly checked and then parsed.
 // Output of some basic file information or an error message.
 function onXSLFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-    var f = files[0];
-    var fn = f.name;
-    if (fn.length < 4 || fn.substr(fn.length-4, 4).toLowerCase() !== ".xsl"){
+	$("#button1").css("visibility", "hidden");
+	$("#button2").css("visibility", "hidden");
+	$("#infobutton1").html("");
+	$("#infobutton2").html("");
+    var fileList = evt.target.files; // FileList object
+    var file = fileList[0];
+    var fileName = file.name;
+    if (fileName.length < 4 || fileName.substr(fileName.length-4, 4).toLowerCase() !== ".xsl"){
        $("#info".concat(evt.target.id)).html(alertNode
           ("danger", "The XSL file was not processed. Please make sure that the file ends with \".xsl\"."));
     }
-    else if (f.type != 'text/xml'){
+    else if (file.type != 'text/xml'){
        $("#info".concat(evt.target.id)).html(alertNode
           ("danger", "The XSL file was not processed. Please make sure that it is the correct file type."));
     }
     else{
-       $("#info".concat(evt.target.id)).html('<h4>Loading file:</h4>' + fileInformationList(f));
+       $("#info".concat(evt.target.id)).html('<h4>Loading file:</h4>' + fileInformationList(file));
        xslReader = new FileReader();
        xslReader.onloadend = function(e){
           try{
@@ -87,17 +79,18 @@ function onXSLFileSelect(evt) {
                 ("danger", "Error while parsing the XSL file. Make sure the file is correct."));
           }
        };
-       xslReader.readAsText(f);
+       xslReader.readAsText(file);
     }
 }
 
 function transformXmlXsl(evt){
-   try{
+	$("#button2").css("visibility", "hidden");
+	$("#infobutton2").html("");
+	try{
       var processor = new XSLTProcessor();
       $("#info".concat(evt.target.id)).html("Processing...");
       processor.importStylesheet(xslfile);
-      var result = processor.transformToDocument(xmlfile);
-      transformedXmlFile = result;
+      transformedXmlFile = processor.transformToDocument(xmlfile);
       $("#info".concat(evt.target.id)).html("Transformation complete.");
       $("#button2").css("visibility", "visible");
    }
@@ -114,30 +107,3 @@ function downloadTransformedFile(evt){
    download(text, "file.html", "text/xml");
    $("#info".concat(evt.target.id)).html(downloadLink(text, "file.html", "text/xml"));
 }
-
-/*function loadXml(evt){
-   var asyncReceiver = function(response){
-      xmlfile = response.responseXML;
-      xmlstring = response.responseText;
-      if (xmlfile == undefined){
-         $("#info".concat(evt.target.id)).html('no XML file!');
-      }
-      else{
-         $("#info".concat(evt.target.id)).html('XML file ready.'+ xmlstring);
-      }
-   };
-   loadXMLDoc("test.xml", asyncReceiver);
-}
-
-function loadXsl(evt){
-   var asyncReceiver = function(response){
-      xslfile = response.responseXML;
-      if (xslfile == undefined){
-         $("#info".concat(evt.target.id)).html('no XSL file!');
-      }
-      else{
-         $("#info".concat(evt.target.id)).html('XSL file ready.');
-      } 
-   };
-   loadXMLDoc("test.xsl", asyncReceiver);
-}*/

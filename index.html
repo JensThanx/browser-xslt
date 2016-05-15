@@ -1,16 +1,18 @@
 <!DOCTYPE HTML>
+
 <html>
+
  <head>
-     <meta charset="utf-8" />
-     <title>XSLT</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-     <script type="text/javascript" src="js-xslt.js"></script>
-     <script type="text/javascript" src="visual.js"></script>
-     <script type="text/javascript" src="xmlHelper.js"></script>
-     <script type="text/javascript" src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
-     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap.css"/>
-     <style>
+   <meta charset="utf-8" />
+   <title>XSLT</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+   <script type="text/javascript" src="script.js"></script>
+   <script type="text/javascript" src="helper.js"></script>
+   <script type="text/javascript" src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+   <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap.css"/>
+
+   <style>
     .head1 {
        background-color: #000033;
     }
@@ -30,19 +32,22 @@
        visibility: hidden;
     }     
    </style>
+
  </head>
+
  <body>
-    <nav class="navbar navbar-inverse">
-       <div class="container-fluid">
-          <div class="navbar-header">
-             <a class="navbar-brand" id="head" href="#">
-                XSLT Transformation
-             </a>
-          </div>
-       </div>
-    </nav>
-    <div class="container">
-       <div id="alertspace"></div>  
+   <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+         <div class="navbar-header">
+            <a class="navbar-brand" id="head" href="#">
+               XSLT Transformation
+            </a>
+         </div>
+      </div>
+   </nav>
+   
+   <div class="container">
+      <div id="alertspace"></div>
       <div class="row">
           <div class="col-lg-3 col-sm-6">
              <div class="well area"><h3>Step 1: Load XML file</h3>
@@ -71,20 +76,26 @@
           </div>     
        </div>  
     </div> 
+
     <div class="container-fluid">
        (C) Jens Thenent, 2016
     </div>
+
      <script>
+     // check if some necessary methods are supported. Alert if not.
       if (window.File && window.FileReader && window.FileList && window.Blob && window.XMLHttpRequest) {
         // Great success! All the File APIs are supported.
       } else {
         alert('The APIs are not fully supported in this browser.');
       }
-       $("#file1").change(onXMLFileSelect);
-       $("#file2").change(onXSLFileSelect);
-       $("#button1").click(transformXmlXsl);
-       $("#button2").click(downloadTransformedFile);
-       $("#head").click(function(){location.reload()});
-    </script>
+      
+      // event handler for all buttons
+      $("#file1").change(onXMLFileSelect);
+      $("#file2").change(onXSLFileSelect);
+      $("#button1").click(transformXmlXsl);
+      $("#button2").click(downloadTransformedFile);
+      $("#head").click(function(){location.reload()});
+   </script>
+
  </body>
 </html>
